@@ -26,7 +26,7 @@ export function AbilitySelect({
     return (
         <Box>
             <Select value={currentAbilityName} onChange={handleChange}>
-                {filterAbilities().map((ability) => {
+                {filterAbilities()?.map((ability) => {
                     return (
                         <MenuItem
                             key={ability}
