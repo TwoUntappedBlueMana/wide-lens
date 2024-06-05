@@ -10,6 +10,7 @@ import {
 import Pokedex, { Pokemon } from "pokedex-promise-v2";
 import { DefensiveRelationsChart, TypeChip } from "./DefensiveTypeChart";
 import { MoveSelect } from "@/app/components/MoveSelect";
+import { AbilitySelect } from "@/app/components/AbilitySelect";
 import { sortMovesAlphabetically } from "@/app/utils/utils";
 import { ArrowDropDown } from "@mui/icons-material";
 
@@ -20,7 +21,7 @@ export function PokemonCard({
     pokedex: Pokedex;
     pokemonData: Pokemon;
 }) {
-    const { moves } = pokemonData;
+    const { moves, abilities } = pokemonData;
 
     return (
         <Paper sx={{ display: "flex", p: 1 }}>
@@ -52,6 +53,11 @@ export function PokemonCard({
                                 />
                             );
                         })}
+
+                        <AbilitySelect 
+                            pokedex={pokedex}
+                            abilities={abilities}
+                        />
                     </Stack>
                 </Stack>
                 <Accordion>
