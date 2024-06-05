@@ -10,24 +10,23 @@ export function AbilitySelect({
     pokedex: Pokedex;
     abilities: PokemonAbility[];
 }) {
-    // map names of abilities
-    const abilityNames = abilities.map( i => i.ability.name );
-    // prune dupllicates
-    const filteredAbilities = Array.from( new Set(abilityNames) );
     const [currentAbilityName, setCurrentAbility] = useState<string>(abilities[0].ability.name);
 
     function handleChange(event: SelectChangeEvent) {
         setCurrentAbility(event.target.value);
     }
 
-    useEffect(() => {
-        pokedex.getAbilityByName(currentAbilityName);
-    }, [currentAbilityName]);
+    function filterAbilities() {
+        // map names of abilities
+        const abilityNames = abilities.map( i => i.ability.name );
+        // prune dupllicates
+        return Array.from( new Set(abilityNames) );    
+    }
     
     return (
         <Box>
             <Select value={currentAbilityName} onChange={handleChange}>
-                {filteredAbilities?.map((ability) => {
+                {filterAbilities().map((ability) => {
                     return (
                         <MenuItem
                             key={ability}

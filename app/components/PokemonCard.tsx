@@ -53,7 +53,6 @@ export function PokemonCard({
                                 />
                             );
                         })}
-
                         <AbilitySelect 
                             pokedex={pokedex}
                             abilities={abilities}
