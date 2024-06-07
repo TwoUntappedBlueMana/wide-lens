@@ -7,7 +7,7 @@ import { PokemonCard } from "@/app/components/PokemonCard";
 
 export default function Home() {
     const pokedex = new Pokedex();
-    const [typeList, sortTypeList] = useState<string[]>([]); /* <-- fuck this thing */
+    const [typeList, sortTypeList] = useState<string[]>([]);
     const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
     const [pokemonIds, setPokemonIds] = useState<number[]>([
         1003, 821, 25, 1002, 884,

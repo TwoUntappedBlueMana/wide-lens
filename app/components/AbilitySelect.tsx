@@ -16,7 +16,7 @@ export function AbilitySelect({
         setCurrentAbility(event.target.value);
     }
 
-    function filterAbilities() {
+    function filterAbilities(abilities) {
         // map names of abilities
         const abilityNames = abilities.map( i => i.ability.name );
         // prune dupllicates
@@ -26,7 +26,7 @@ export function AbilitySelect({
     return (
         <Box>
             <Select value={currentAbilityName} onChange={handleChange}>
-                {filterAbilities()?.map((ability) => {
+                {filterAbilities(abilities)?.map((ability) => {
                     return (
                         <MenuItem
                             key={ability}

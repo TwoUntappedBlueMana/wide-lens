@@ -21,10 +21,6 @@ export function TeraSelect({
         setTypeChip(event.target.value);
     }
 
-    useEffect(() => {
-        
-    }, [currentTera]);
-
     return (
         <Box>
             <TypeChip type={typeChip} />
