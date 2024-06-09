@@ -1,7 +1,7 @@
 "use client";
 
 import { Grid } from "@mui/material";
-import Pokedex, { Pokemon, PokemonType } from "pokedex-promise-v2";
+import Pokedex, { Pokemon } from "pokedex-promise-v2";
 import { useEffect, useState } from "react";
 import { PokemonCard } from "@/app/components/PokemonCard";
 
