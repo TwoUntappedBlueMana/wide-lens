@@ -11,18 +11,24 @@ import Pokedex, { Pokemon } from "pokedex-promise-v2";
 import { DefensiveRelationsChart, TypeChip } from "./DefensiveTypeChart";
 import { MoveSelect } from "@/app/components/MoveSelect";
 import { AbilitySelect } from "@/app/components/AbilitySelect";
+import { ItemSelect } from "@/app/components/ItemSelect";
+import { TeraSelect } from "@/app/components/TeraSelect";
 import { sortMovesAlphabetically } from "@/app/utils/utils";
 import { ArrowDropDown } from "@mui/icons-material";
 
 export function PokemonCard({
     pokedex,
     pokemonData,
+    allTypes,
+    allItems
 }: {
     pokedex: Pokedex;
     pokemonData: Pokemon;
+    allTypes: string[];
+    allItems: string[];
 }) {
-    const { moves, abilities } = pokemonData;
-
+    const { moves, abilities, types } = pokemonData;
+    
     return (
         <Paper sx={{ display: "flex", p: 1 }}>
             <Stack spacing={2}>
@@ -36,6 +42,11 @@ export function PokemonCard({
                                 <TypeChip key={index} type={type.type.name} />
                             );
                         })}
+                        <TeraSelect 
+                            pokedex={pokedex}
+                            types={types}
+                            allTypes={allTypes}
+                        />
                         <Box
                             component="img"
                             sx={{ height: 192 }}
@@ -56,6 +67,10 @@ export function PokemonCard({
                         <AbilitySelect 
                             pokedex={pokedex}
                             abilities={abilities}
+                        />
+                        <ItemSelect
+                            pokedex={pokedex} 
+                            items={allItems}
                         />
                     </Stack>
                 </Stack>
