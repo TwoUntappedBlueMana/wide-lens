@@ -1,8 +1,15 @@
-import { Select, MenuItem, SelectChangeEvent, Box } from "@mui/material";
+import {
+    Select,
+    MenuItem,
+    SelectChangeEvent,
+    Box,
+    Typography,
+} from "@mui/material";
 import Pokedex, { MoveElement } from "pokedex-promise-v2";
 import { useEffect, useState } from "react";
 import { toTitleCase } from "@/app/utils/utils";
 import { TypeChip } from "./DefensiveTypeChart";
+import { useQuery } from "@tanstack/react-query";
 
 export function MoveSelect({
     pokedex,
@@ -12,21 +19,27 @@ export function MoveSelect({
     moves: MoveElement[];
 }) {
     const [currentMove, setCurrentMove] = useState<string>(moves[0].move.name);
-    const [moveType, setMoveType] = useState<string>();
+
+    const { isLoading, data: moveType } = useQuery({
+        queryKey: [`moveData - ${currentMove}`],
+        queryFn: () => {
+            return pokedex.getMoveByName(currentMove).then((data) => {
+                return data.type.name;
+            });
+        },
+    });
 
     function handleChange(event: SelectChangeEvent) {
         setCurrentMove(event.target.value);
     }
 
-    useEffect(() => {
-        pokedex.getMoveByName(currentMove).then((moveData) => {
-            setMoveType(moveData.type.name);
-        });
-    }, [currentMove]);
-
     return (
         <Box>
-            <TypeChip type={moveType} />
+            {isLoading ? (
+                <Typography>Loading...</Typography>
+            ) : (
+                <TypeChip type={moveType || "normal"} />
+            )}
             <Select value={currentMove} onChange={handleChange}>
                 {moves?.map((move) => {
                     return (
