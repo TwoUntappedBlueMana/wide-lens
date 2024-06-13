@@ -1,41 +1,33 @@
-import { Select, MenuItem, SelectChangeEvent, Box } from "@mui/material";
-import Pokedex, { MoveElement } from "pokedex-promise-v2";
-import { useEffect, useState } from "react";
-import { toTitleCase } from "@/app/utils/utils";
-import { TypeChip } from "./DefensiveTypeChart";
+import {
+    Box,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
+    Typography,
+} from "@mui/material";
+import { Dex, Learnset } from "@pkmn/dex";
+import { useState } from "react";
 
-export function MoveSelect({
-    pokedex,
-    moves,
-}: {
-    pokedex: Pokedex;
-    moves: MoveElement[];
-}) {
-    const [currentMove, setCurrentMove] = useState<string>(moves[0].move.name);
-    const [moveType, setMoveType] = useState<string>();
+import { TypeChip } from "@/app/components/TypeChip";
+
+export function MoveSelect({ moves }: { moves: Learnset }) {
+    const { learnset } = moves;
+    const defaultMove = Object.keys(learnset)[0];
+
+    const [currentMove, setCurrentMove] = useState<string>(defaultMove);
 
     function handleChange(event: SelectChangeEvent) {
         setCurrentMove(event.target.value);
     }
 
-    useEffect(() => {
-        pokedex.getMoveByName(currentMove).then((moveData) => {
-            setMoveType(moveData.type.name);
-        });
-    }, [currentMove]);
-
     return (
         <Box>
-            <TypeChip type={moveType} />
+            <TypeChip type={Dex.moves.get(currentMove).type.toLowerCase()} />
             <Select value={currentMove} onChange={handleChange}>
-                {moves?.map((move) => {
+                {Object.keys(learnset).map((move) => {
                     return (
-                        <MenuItem
-                            key={move.move.name}
-                            value={move.move.name}
-                            sx={{ bgcolor: `type.${moveType}` }}
-                        >
-                            {toTitleCase(move.move.name)}
+                        <MenuItem key={move} value={move}>
+                            {Dex.moves.get(move).name}
                         </MenuItem>
                     );
                 })}
