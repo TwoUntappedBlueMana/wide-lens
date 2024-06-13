@@ -1,38 +1,23 @@
-import { Select, MenuItem, SelectChangeEvent, Box, Menu } from "@mui/material";
-import Pokedex, { PokemonAbility } from "pokedex-promise-v2";
-import { useEffect, useState } from "react";
-import { toTitleCase } from "@/app/utils/utils";
+import { Select, MenuItem, SelectChangeEvent, Box } from "@mui/material";
+import { useState } from "react";
+import { SpeciesAbility } from "@pkmn/dex-types";
 
-export function AbilitySelect({
-    pokedex,
-    abilities,
-}: {
-    pokedex: Pokedex;
-    abilities: PokemonAbility[];
-}) {
-    const [currentAbilityName, setCurrentAbility] = useState<string>(abilities[0].ability.name);
+export function AbilitySelect({ abilities }: { abilities: SpeciesAbility }) {
+    const [currentAbilityName, setCurrentAbility] = useState<string>(
+        abilities[0]
+    );
 
     function handleChange(event: SelectChangeEvent) {
         setCurrentAbility(event.target.value);
     }
 
-    function filterAbilities(abilities) {
-        // map names of abilities
-        const abilityNames = abilities.map( i => i.ability.name );
-        // prune dupllicates
-        return Array.from( new Set(abilityNames) );    
-    }
-    
     return (
         <Box>
             <Select value={currentAbilityName} onChange={handleChange}>
-                {filterAbilities(abilities)?.map((ability) => {
+                {Object.values(abilities).map((ability) => {
                     return (
-                        <MenuItem
-                            key={ability}
-                            value={ability}
-                        >
-                            {toTitleCase(ability)}
+                        <MenuItem key={ability} value={ability}>
+                            {ability}
                         </MenuItem>
                     );
                 })}

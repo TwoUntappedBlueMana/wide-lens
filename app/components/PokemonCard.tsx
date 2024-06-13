@@ -1,14 +1,8 @@
-import { ArrowDropDown } from "@mui/icons-material";
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Box,
-    Paper,
-    Stack,
-    Typography,
-} from "@mui/material";
-import Pokedex, { Pokemon } from "pokedex-promise-v2";
+"use client";
+
+import { Box, Paper, Stack, Typography } from "@mui/material";
+import { Dex, Species } from "@pkmn/dex";
+import { useQuery } from "@tanstack/react-query";
 
 import { AbilitySelect } from "@/app/components/AbilitySelect";
 import { DefensiveRelationsChart } from "@/app/components/DefensiveTypeChart";
@@ -16,74 +10,66 @@ import { ItemSelect } from "@/app/components/ItemSelect";
 import { MoveSelect } from "@/app/components/MoveSelect";
 import { TeraSelect } from "@/app/components/TeraSelect";
 import { TypeChip } from "@/app/components/TypeChip";
-import { sortMovesAlphabetically } from "@/app/utils/utils";
 
 export function PokemonCard({
-    pokedex,
     pokemonData,
-    allTypes,
-    allItems,
+    imageSrc,
 }: {
-    pokedex: Pokedex;
-    pokemonData: Pokemon;
-    allTypes: string[];
-    allItems: string[];
+    pokemonData: Species;
+    imageSrc: {
+        gen: number;
+        w: number;
+        h: number;
+        url: string;
+        pixelated: boolean;
+    };
 }) {
-    const { moves, abilities, types } = pokemonData;
+    const { isLoading, data: learnset } = useQuery({
+        queryKey: [`learnset - ${pokemonData.id}`],
+        queryFn: () => {
+            return Dex.learnsets.get(pokemonData.id).then((data) => {
+                return data;
+            });
+        },
+    });
 
     return (
         <Paper sx={{ display: "flex", p: 1 }}>
             <Stack spacing={2}>
                 <Stack direction="row" spacing={2}>
                     <Stack spacing={2}>
-                        <Typography variant="h5" component="div">
-                            {pokemonData?.name}
-                        </Typography>
-                        {pokemonData.types.map((type, index) => {
+                        <Typography>{pokemonData.name}</Typography>
+                        {pokemonData.types.map((type) => {
                             return (
-                                <TypeChip key={index} type={type.type.name} />
-                            );
-                        })}
-                        <TeraSelect
-                            pokedex={pokedex}
-                            types={types}
-                            allTypes={allTypes}
-                        />
-                        <Box
-                            component="img"
-                            sx={{ height: 192 }}
-                            alt={pokemonData.name}
-                            src={pokemonData.sprites.front_default}
-                        />
-                    </Stack>
-                    <Stack spacing={2}>
-                        {[0, 1, 2, 3].map((currentMove, index) => {
-                            return (
-                                <MoveSelect
-                                    key={index}
-                                    pokedex={pokedex}
-                                    moves={sortMovesAlphabetically(moves)}
+                                <TypeChip
+                                    key={type}
+                                    type={type.toLowerCase()}
                                 />
                             );
                         })}
-                        <AbilitySelect
-                            pokedex={pokedex}
-                            abilities={abilities}
+                        <TeraSelect />
+                        <Box
+                            component="img"
+                            sx={{ width: imageSrc.w }}
+                            alt={pokemonData.name}
+                            src={imageSrc.url}
                         />
-                        <ItemSelect pokedex={pokedex} items={allItems} />
+                    </Stack>
+                    <Stack spacing={2}>
+                        {learnset &&
+                            [0, 1, 2, 3].map((currentMove) => {
+                                return (
+                                    <MoveSelect
+                                        key={currentMove}
+                                        moves={learnset}
+                                    />
+                                );
+                            })}
+                        <AbilitySelect abilities={pokemonData.abilities} />
+                        <ItemSelect />
                     </Stack>
                 </Stack>
-                <Accordion>
-                    <AccordionSummary expandIcon={<ArrowDropDown />}>
-                        Defensive Type Chart
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <DefensiveRelationsChart
-                            pokedex={pokedex}
-                            types={pokemonData.types}
-                        />
-                    </AccordionDetails>
-                </Accordion>
+                <DefensiveRelationsChart types={pokemonData.types} />
             </Stack>
         </Paper>
     );

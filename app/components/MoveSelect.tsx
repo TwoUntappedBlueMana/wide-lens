@@ -1,33 +1,20 @@
 import {
-    Select,
-    MenuItem,
-    SelectChangeEvent,
     Box,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
     Typography,
 } from "@mui/material";
-import Pokedex, { MoveElement } from "pokedex-promise-v2";
-import { useEffect, useState } from "react";
-import { toTitleCase } from "@/app/utils/utils";
-import { TypeChip } from "./DefensiveTypeChart";
-import { useQuery } from "@tanstack/react-query";
+import { Dex, Learnset } from "@pkmn/dex";
+import { useState } from "react";
 
-export function MoveSelect({
-    pokedex,
-    moves,
-}: {
-    pokedex: Pokedex;
-    moves: MoveElement[];
-}) {
-    const [currentMove, setCurrentMove] = useState<string>(moves[0].move.name);
+import { TypeChip } from "@/app/components/TypeChip";
 
-    const { isLoading, data: moveType } = useQuery({
-        queryKey: [`moveData - ${currentMove}`],
-        queryFn: () => {
-            return pokedex.getMoveByName(currentMove).then((data) => {
-                return data.type.name;
-            });
-        },
-    });
+export function MoveSelect({ moves }: { moves: Learnset }) {
+    const { learnset } = moves;
+    const defaultMove = Object.keys(learnset)[0];
+
+    const [currentMove, setCurrentMove] = useState<string>(defaultMove);
 
     function handleChange(event: SelectChangeEvent) {
         setCurrentMove(event.target.value);
@@ -35,20 +22,12 @@ export function MoveSelect({
 
     return (
         <Box>
-            {isLoading ? (
-                <Typography>Loading...</Typography>
-            ) : (
-                <TypeChip type={moveType || "normal"} />
-            )}
+            <TypeChip type={Dex.moves.get(currentMove).type.toLowerCase()} />
             <Select value={currentMove} onChange={handleChange}>
-                {moves?.map((move) => {
+                {Object.keys(learnset).map((move) => {
                     return (
-                        <MenuItem
-                            key={move.move.name}
-                            value={move.move.name}
-                            sx={{ bgcolor: `type.${moveType}` }}
-                        >
-                            {toTitleCase(move.move.name)}
+                        <MenuItem key={move} value={move}>
+                            {Dex.moves.get(move).name}
                         </MenuItem>
                     );
                 })}
