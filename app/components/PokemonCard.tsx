@@ -1,3 +1,4 @@
+import { ArrowDropDown } from "@mui/icons-material";
 import {
     Accordion,
     AccordionDetails,
@@ -8,19 +9,20 @@ import {
     Typography,
 } from "@mui/material";
 import Pokedex, { Pokemon } from "pokedex-promise-v2";
-import { DefensiveRelationsChart, TypeChip } from "./DefensiveTypeChart";
-import { MoveSelect } from "@/app/components/MoveSelect";
+
 import { AbilitySelect } from "@/app/components/AbilitySelect";
+import { DefensiveRelationsChart } from "@/app/components/DefensiveTypeChart";
 import { ItemSelect } from "@/app/components/ItemSelect";
+import { MoveSelect } from "@/app/components/MoveSelect";
 import { TeraSelect } from "@/app/components/TeraSelect";
+import { TypeChip } from "@/app/components/TypeChip";
 import { sortMovesAlphabetically } from "@/app/utils/utils";
-import { ArrowDropDown } from "@mui/icons-material";
 
 export function PokemonCard({
     pokedex,
     pokemonData,
     allTypes,
-    allItems
+    allItems,
 }: {
     pokedex: Pokedex;
     pokemonData: Pokemon;
@@ -28,7 +30,7 @@ export function PokemonCard({
     allItems: string[];
 }) {
     const { moves, abilities, types } = pokemonData;
-    
+
     return (
         <Paper sx={{ display: "flex", p: 1 }}>
             <Stack spacing={2}>
@@ -42,7 +44,7 @@ export function PokemonCard({
                                 <TypeChip key={index} type={type.type.name} />
                             );
                         })}
-                        <TeraSelect 
+                        <TeraSelect
                             pokedex={pokedex}
                             types={types}
                             allTypes={allTypes}
@@ -64,14 +66,11 @@ export function PokemonCard({
                                 />
                             );
                         })}
-                        <AbilitySelect 
+                        <AbilitySelect
                             pokedex={pokedex}
                             abilities={abilities}
                         />
-                        <ItemSelect
-                            pokedex={pokedex} 
-                            items={allItems}
-                        />
+                        <ItemSelect pokedex={pokedex} items={allItems} />
                     </Stack>
                 </Stack>
                 <Accordion>
